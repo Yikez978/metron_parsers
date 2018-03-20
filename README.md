@@ -85,7 +85,7 @@ The following example substitutes variables "var1" and "var2" in the given templ
     "parsers": {
         "render": {
             "class": "nl.qsight.links.fields.RenderLink",
-            "template": "Hello {{var1}} and {{var2}}"
+            "template": "Hello {{var1}} and {{var2}}",
             "variables": ["var1", "var2"],
             "output": "rendered_field"
         }
