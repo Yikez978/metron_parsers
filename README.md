@@ -1,6 +1,6 @@
-# Extra Parsers for Metron
+# Parsers for Metron
 
-This repository contains extra parsers for Metron.
+This repository contains parsers for Metron.
 
 ## Parser components
 
