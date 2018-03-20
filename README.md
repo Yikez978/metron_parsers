@@ -14,7 +14,7 @@ The ChainParser first converts a raw text (the bytes of a raw text) to an initia
 
 These fields can be overwritten by ChainLinks. The ChainParser validates the intermediate JSON objects and checks whether the `original_string` field and `timestamp` field are available after a ChainLink is executed.
 
-The ChainParser points to a single ChainLink which is the root of the ChainLink DAG (Directed Acyclic Graph). A ChainLink points either to another ChainLink or is the final ChainLink.
+The ChainParser points to a single ChainLink which is the root of the ChainLink DAG (Directed Acyclic Graph). A ChainLink points either to another ChainLink or is the final ChainLink. The resulting JSON object is the output of the ChainParser.
 
 ### ChainLink
 
