@@ -31,7 +31,7 @@ The identity link passes on the given JSON object. No changes are made to the in
     "chain": ["identity"],
         "parsers": {
             "identity": {
-            "class": "nl.qsight.links.fields.IdentityLink"
+            "class": "org.apache.metron.parsers.contrib.links.fields.IdentityLink"
         }
     }
 }
@@ -46,7 +46,7 @@ The normalize field link applies the normalize function to all fields. The field
     "chain": ["normalize_fields"],
     "parsers": {
         "normalize_fields": {
-            "class": "nl.qsight.links.fields.NormalizeFieldLink"
+            "class": "org.apache.metron.parsers.contrib.links.fields.NormalizeFieldLink"
         }
     }
 }
@@ -61,7 +61,7 @@ The rename link renames field names. The following configuration renames "field1
     "chain": ["rename_fields"],
     "parsers": {
         "rename_fields": {
-            "class": "nl.qsight.links.fields.RenameLink",
+            "class": "org.apache.metron.parsers.contrib.links.fields.RenameLink",
             "renames": {
                 "field1": "fieldX",
                 "field2": "fieldY"
@@ -84,7 +84,7 @@ The following example substitutes variables "var1" and "var2" in the given templ
     "chain": ["render"],
     "parsers": {
         "render": {
-            "class": "nl.qsight.links.fields.RenderLink",
+            "class": "org.apache.metron.parsers.contrib.links.fields.RenderLink",
             "template": "Hello {{var1}} and {{var2}}",
             "variables": ["var1", "var2"],
             "output": "rendered_field"
@@ -104,7 +104,7 @@ The following example selects "field1" and stores its value into the special inp
     "chain": ["select"],
     "parsers": {
         "select": {
-            "class": "nl.qsight.links.fields.SelectLink",
+            "class": "org.apache.metron.parsers.contrib.links.fields.SelectLink",
             "field": "field1"
         }
     }
@@ -120,7 +120,7 @@ The trim value link trims whitespace for each value in the intermediate JSON obj
     "chain": ["trim_values"],
     "parsers": {
         "trim_values": {
-            "class": "nl.qsight.links.fields.TrimValueLink"
+            "class": "org.apache.metron.parsers.contrib.links.fields.TrimValueLink"
         }
     }
 }
@@ -137,7 +137,7 @@ The following example removes "field1" and "field2" from the input. The fields a
     "chain": ["blacklist"],
     "parsers": {
         "blacklist": {
-            "class": "nl.qsight.links.fields.BlacklistLink",
+            "class": "org.apache.metron.parsers.contrib.links.fields.BlacklistLink",
             "fields": ["field1", "field2"]
         }
     }
@@ -155,7 +155,7 @@ The following example whitelists "field1" and "field2" so these are the only fie
     "chain": ["whitelist"],
     "parsers": {
         "trim_values": {
-            "class": "nl.qsight.links.fields.WhitelistLink",
+            "class": "org.apache.metron.parsers.contrib.links.fields.WhitelistLink",
             "fields": ["field1", "field2"]
         }
     }
@@ -177,7 +177,7 @@ The JSON Decoder link decodes JSON found in the input field.
     "chain": ["json_decoder"],
     "parsers": {
         "json_decoder": {
-            "class": "nl.qsight.links.io.JSONDecoderLink"
+            "class": "org.apache.metron.parsers.contrib.links.io.JSONDecoderLink"
         }
     }
 }
@@ -196,7 +196,7 @@ The pair delimiter would be `|` and the key-value delimiter is `=`. The followin
     "chain": ["keyvalue"],
     "parsers": {
         "keyvalue": {
-            "class": "nl.qsight.links.io.KeyValueLink",
+            "class": "org.apache.metron.parsers.contrib.links.io.KeyValueLink",
             "pair_delimiter": "|",
             "key_value_delimiter": "=",
             "valid_key_characters": "A-Z"
@@ -206,6 +206,24 @@ The pair delimiter would be `|` and the key-value delimiter is `=`. The followin
 ```
 
 The "pair_delimiter" argument specifies which pair delimiter is used. The "key_value_delimiter" argument specifies the key-value delimiter and the "valid_key_characters" argument specifies the characters of which a key exists. The last argument is a substring of the regular expression for detecting keys and is required for performance issues. The value "A-Z" refers to the fact that the keys consist only of uppercase characters.
+
+#### Regex file link
+
+The Regex file link reads Regex patterns from a file (line separated) and tries to find a match. When there is a match, all named variables (like `(?<number>\d+)`) are stored in the output JSON object.
+
+Instead of specifying a file to load the patterns from, it is also possible to specify the `patterns` field which should be an array of patterns. It is possible to load a file from HDFS (by specifying the `hdfs://` prefix). The file is specified in the `file` field.
+
+```json
+{
+    "chain": ["parse_regexfile"],
+    "parsers": {
+        "keyvalue": {
+            "class": "org.apache.metron.parsers.contrib.links.io.RegexFileLink",
+            "file": "hdfs://my_regex_file.txt"
+        }
+    }
+}
+```
 
 #### Regex link
 
@@ -218,7 +236,7 @@ Take a look at the following example:
     "chain": ["regex"],
     "parsers": {
         "regex": {
-            "class": "nl.qsight.links.io.RegexLink",
+            "class": "org.apache.metron.parsers.contrib.links.io.RegexLink",
             "pattern": "(?i)(user|username)[=:](\\w+)",
             "selector": {
                 "username": "2"
@@ -245,7 +263,7 @@ Take a look at the following example:
     "chain": ["split"],
     "parsers": {
         "split": {
-            "class": "nl.qsight.links.io.SplitLink",
+            "class": "org.apache.metron.parsers.contrib.links.io.SplitLink",
             "delimiter": "|",
             "selector": {
                 "-1": "last_field",
@@ -268,7 +286,7 @@ The timestamp link uses regular expressions to search for datetime patterns in t
     "chain": ["parse_datetime"],
     "parsers": {
         "parse_datetime": {
-            "class": "nl.qsight.links.io.TimestampLink",
+            "class": "org.apache.metron.parsers.contrib.links.io.TimestampLink",
             "patterns": [
                 ["([0-9]{4})-([0-9]+)-([0-9]+)T([0-9]+):([0-9]+):([0-9]+).([0-9]+)([+-]{1}[0-9]{1,2}[:]?[0-9]{2})", "yyyy MM dd HH mm ss SSSSSS Z", "newest"]
             ]
@@ -301,7 +319,7 @@ The timestamp parser generates the following fields:
 A ChainParser mainly consists of configuration and uses the ChainParser base class. The configuration should be created under `test/resources/your_parser_name/config.json`. Take a look at different ChainParser configuration files for inspiration. Then, a test file need to be created (`test/java/nl/qsight/parserconfig/TestYourParserName`). It should contain the following contents:
 
 ```java
-package nl.qsight.parserconfig;
+package org.apache.metron.parsers.contrib.parserconfig;
 
 public class TestYourParserName extends TestParser {
 
@@ -326,22 +344,22 @@ Logline:         0
 Input:           ...
 Expected output: {...}
 ===================================================================================
-Link:            nl.qsight.links.io.JSONDecoderLink
+Link:            org.apache.metron.parsers.contrib.links.io.JSONDecoderLink
 Duration:        12.724098 ms
 -----------------------------------------------------------------------------------
-Link:            nl.qsight.links.fields.RenderLink
+Link:            org.apache.metron.parsers.contrib.links.fields.RenderLink
 Duration:        0.043077 ms
 -----------------------------------------------------------------------------------
-Link:            nl.qsight.links.io.RegexLink
+Link:            org.apache.metron.parsers.contrib.links.io.RegexLink
 Duration:        1.275897 ms
 -----------------------------------------------------------------------------------
-Link:            nl.qsight.links.fields.RenameLink
+Link:            org.apache.metron.parsers.contrib.links.fields.RenameLink
 Duration:        0.041026 ms
 -----------------------------------------------------------------------------------
-Link:            nl.qsight.links.fields.RenderLink
+Link:            org.apache.metron.parsers.contrib.links.fields.RenderLink
 Duration:        0.03159 ms
 -----------------------------------------------------------------------------------
-Link:            nl.qsight.links.io.TimestampLink
+Link:            org.apache.metron.parsers.contrib.links.io.TimestampLink
 Duration:        2.045538 ms
 -----------------------------------------------------------------------------------
 Parser duration: 16.161226 ms
